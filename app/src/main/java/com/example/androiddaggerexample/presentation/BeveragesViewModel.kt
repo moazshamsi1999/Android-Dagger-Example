@@ -1,5 +1,6 @@
 package com.example.androiddaggerexample.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androiddaggerexample.domain.GetPopularBeveragesUseCase
@@ -9,11 +10,14 @@ import kotlinx.coroutines.launch
 class BeveragesViewModel(private val getPopularBeveragesUseCase: GetPopularBeveragesUseCase) :ViewModel() {
 
         init {
-            println("BeveragesViewModel is working...")
-            viewModelScope.launch(Dispatchers.IO) {
-                println(getPopularBeveragesUseCase.execute().toString())
-            }
+            Log.d("logs","BeveragesViewModel is working...")
         }
+
+    fun getPopularBeverages() {
+        viewModelScope.launch(Dispatchers.IO) {
+            Log.d("logs",getPopularBeveragesUseCase.execute().toString())
+        }
+    }
 
 
 }
