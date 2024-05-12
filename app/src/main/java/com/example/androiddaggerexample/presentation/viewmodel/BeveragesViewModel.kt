@@ -1,4 +1,4 @@
-package com.example.androiddaggerexample.presentation
+package com.example.androiddaggerexample.presentation.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

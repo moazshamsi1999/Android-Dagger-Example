@@ -1,8 +1,8 @@
+package com.example.androiddaggerexample.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.androiddaggerexample.domain.GetPopularBeveragesUseCase
-import com.example.androiddaggerexample.presentation.BeveragesViewModel
 
 class BeveragesViewModelFactory(
     private val getPopularBeveragesUseCase: GetPopularBeveragesUseCase

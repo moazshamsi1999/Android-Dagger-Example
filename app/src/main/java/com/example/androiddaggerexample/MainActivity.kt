@@ -1,6 +1,5 @@
 package com.example.androiddaggerexample
 
-import BeveragesViewModelFactory
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,25 +11,26 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.androiddaggerexample.data.BeverageService
-import com.example.androiddaggerexample.data.BeveragesRepository
-import com.example.androiddaggerexample.domain.GetPopularBeveragesUseCase
-import com.example.androiddaggerexample.presentation.BeveragesViewModel
+import com.example.androiddaggerexample.presentation.di.BeverageComponent
+import com.example.androiddaggerexample.presentation.di.DaggerBeverageComponent
+import com.example.androiddaggerexample.presentation.viewmodel.BeveragesViewModel
+import com.example.androiddaggerexample.presentation.viewmodel.BeveragesViewModelFactory
 import com.example.androiddaggerexample.ui.theme.AndroidDaggerExampleTheme
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
 class MainActivity : ComponentActivity() {
+    private lateinit var beverageComponent: BeverageComponent
+    @Inject
+    lateinit var factory: BeveragesViewModelFactory
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val retrofit=Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("https://raw.githubusercontent.com/")
-            .build()
-
-        val beveragesRepository = BeveragesRepository(retrofit.create(BeverageService::class.java))
-        val getPopularBeveragesUseCase= GetPopularBeveragesUseCase(beveragesRepository)
-        val beveragesViewModel: BeveragesViewModel by viewModels { BeveragesViewModelFactory(getPopularBeveragesUseCase = getPopularBeveragesUseCase) }
+        //Idealy DaggerBeverageComponent should be created in Application class,so dependency graph is available throughout the app
+        //then in any activity you can access the component and inject the dependencies
+        //by doing something like this (applicationContext as YourApplication).yourComponent.inject(this)
+        // I wouldve done it like this (applicationContext as BeverageApp).beverageComponent.inject(this)
+        beverageComponent= DaggerBeverageComponent.builder().build()
+        beverageComponent.inject(this)
+        val beveragesViewModel: BeveragesViewModel by viewModels { factory }
         beveragesViewModel.getPopularBeverages()
             setContent {
             AndroidDaggerExampleTheme {
